@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Sun,
   Leaf,
@@ -13,6 +14,7 @@ import {
 } from "lucide-react";
 
 export default function SolarProWebsite() {
+  const navigate = useNavigate();
   const [roofArea, setRoofArea] = useState("");
   const [showCalculation, setShowCalculation] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -115,6 +117,10 @@ export default function SolarProWebsite() {
     }
   };
 
+  const handleGetQuote = () => {
+    navigate("/quoteCalculator");
+  };
+
   return (
     <>
       <style
@@ -189,7 +195,10 @@ export default function SolarProWebsite() {
               </nav>
 
               {/* CTA Button - Hidden on mobile */}
-              <button className="hidden md:block bg-emerald-700 hover:bg-emerald-600 px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:shadow-lg">
+              <button
+                onClick={handleGetQuote}
+                className="hidden md:block bg-emerald-700 hover:bg-emerald-600 px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:shadow-lg"
+              >
                 קבל הצעת מחיר
               </button>
             </div>
@@ -255,7 +264,10 @@ export default function SolarProWebsite() {
 
               {/* Mobile CTA Button */}
               <div className="mt-auto p-6">
-                <button className="w-full bg-emerald-700 hover:bg-emerald-600 text-white px-6 py-4 rounded-full font-bold transition-all duration-300 shadow-lg">
+                <button
+                  onClick={handleGetQuote}
+                  className="w-full bg-emerald-700 hover:bg-emerald-600 text-white px-6 py-4 rounded-full font-bold transition-all duration-300 shadow-lg"
+                >
                   קבל הצעת מחיר
                 </button>
               </div>
@@ -288,7 +300,10 @@ export default function SolarProWebsite() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="bg-amber-400 hover:bg-amber-300 text-emerald-900 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 flex items-center justify-center gap-2">
+                <button
+                  onClick={handleGetQuote}
+                  className="bg-amber-400 hover:bg-amber-300 text-emerald-900 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 flex items-center justify-center gap-2"
+                >
                   <Sun className="w-5 h-5" />
                   חשבו את החיסכון שלכם
                 </button>
@@ -438,6 +453,7 @@ export default function SolarProWebsite() {
                     </ul>
 
                     <button
+                      onClick={handleGetQuote}
                       className={`w-full py-4 rounded-xl font-bold transition-all duration-300 ${
                         panel.highlighted
                           ? "bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-emerald-900 shadow-lg hover:shadow-xl"
