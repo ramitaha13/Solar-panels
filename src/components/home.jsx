@@ -121,6 +121,10 @@ export default function SolarProWebsite() {
     navigate("/quoteCalculator");
   };
 
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
   return (
     <>
       <style
@@ -196,10 +200,10 @@ export default function SolarProWebsite() {
 
               {/* CTA Button - Hidden on mobile */}
               <button
-                onClick={handleGetQuote}
+                onClick={handleLogin}
                 className="hidden md:block bg-emerald-700 hover:bg-emerald-600 px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:shadow-lg"
               >
-                קבל הצעת מחיר
+                כניסה
               </button>
             </div>
           </div>
@@ -265,10 +269,10 @@ export default function SolarProWebsite() {
               {/* Mobile CTA Button */}
               <div className="mt-auto p-6">
                 <button
-                  onClick={handleGetQuote}
+                  onClick={handleLogin}
                   className="w-full bg-emerald-700 hover:bg-emerald-600 text-white px-6 py-4 rounded-full font-bold transition-all duration-300 shadow-lg"
                 >
-                  קבל הצעת מחיר
+                  כניסה
                 </button>
               </div>
             </div>
