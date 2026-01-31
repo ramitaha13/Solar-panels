@@ -25,140 +25,39 @@ import {
   Edit,
   Trash2,
   Filter,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Camera,
+  Save,
 } from "lucide-react";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("profile");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
-  // Sample data
-  const stats = [
-    {
-      title: "סך הכנסות חודשי",
-      value: "₪245,680",
-      change: "+12.5%",
-      icon: DollarSign,
-      color: "emerald",
-    },
-    {
-      title: "פרויקטים פעילים",
-      value: "24",
-      change: "+3",
-      icon: Package,
-      color: "blue",
-    },
-    {
-      title: "לקוחות חדשים",
-      value: "18",
-      change: "+8.2%",
-      icon: Users,
-      color: "amber",
-    },
-    {
-      title: "הצעות ממתינות",
-      value: "12",
-      change: "-2",
-      icon: FileText,
-      color: "purple",
-    },
-  ];
-
-  const recentProjects = [
-    {
-      id: 1,
-      client: "משפחת כהן",
-      type: "התקנת מערכת 6kW",
-      status: "בתהליך",
-      date: "15/01/2026",
-      value: "₪45,000",
-      progress: 65,
-    },
-    {
-      id: 2,
-      client: 'חברת טק בע"מ',
-      type: "מערכת מסחרית 50kW",
-      status: "ממתין לאישור",
-      date: "20/01/2026",
-      value: "₪280,000",
-      progress: 20,
-    },
-    {
-      id: 3,
-      client: "משפחת לוי",
-      type: "התקנת מערכת 8kW",
-      status: "הושלם",
-      date: "10/01/2026",
-      value: "₪52,000",
-      progress: 100,
-    },
-    {
-      id: 4,
-      client: "בית ספר יסודי",
-      type: "מערכת 30kW",
-      status: "בתהליך",
-      date: "25/01/2026",
-      value: "₪165,000",
-      progress: 45,
-    },
-  ];
-
-  const recentQuotes = [
-    {
-      id: 1,
-      client: "דוד מזרחי",
-      email: "david@email.com",
-      panels: 12,
-      area: '24 מ"ר',
-      status: "חדש",
-      date: "30/01/2026",
-    },
-    {
-      id: 2,
-      client: "שרה אברהם",
-      email: "sara@email.com",
-      panels: 16,
-      area: '32 מ"ר',
-      status: "נשלח",
-      date: "29/01/2026",
-    },
-    {
-      id: 3,
-      client: "מיכאל ברקוביץ'",
-      email: "michael@email.com",
-      panels: 20,
-      area: '40 מ"ר',
-      status: "בטיפול",
-      date: "28/01/2026",
-    },
-  ];
+  // Profile data
+  const [profileData, setProfileData] = useState({
+    name: "אדמין ראשי",
+    email: "admin@solarpro.co.il",
+    phone: "050-1234567",
+    address: "רחוב האנרגיה 123, תל אביב",
+    role: "מנהל מערכת",
+    joinDate: "01/01/2024",
+    department: "ניהול",
+    bio: "מנהל מערכת ראשי לחברת סולאר פרו. אחראי על כל היבטי הניהול והתפעול של המערכת.",
+  });
 
   const handleLogout = () => {
     navigate("/login");
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "הושלם":
-        return "bg-green-100 text-green-800";
-      case "בתהליך":
-        return "bg-blue-100 text-blue-800";
-      case "ממתין לאישור":
-        return "bg-amber-100 text-amber-800";
-      case "חדש":
-        return "bg-purple-100 text-purple-800";
-      case "נשלח":
-        return "bg-emerald-100 text-emerald-800";
-      case "בטיפול":
-        return "bg-orange-100 text-orange-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
   const sidebarItems = [
-    { id: "overview", label: "סקירה כללית", icon: Home },
+    { id: "profile", label: "פרטים אישיים", icon: User },
     { id: "projects", label: "פרויקטים", icon: Package },
     { id: "quotes", label: "הצעות מחיר", icon: FileText },
     { id: "clients", label: "לקוחות", icon: Users },
@@ -177,7 +76,13 @@ export default function Dashboard() {
     } else {
       setActiveTab(itemId);
     }
-    setMobileMenuOpen(false);
+    setSidebarOpen(false);
+  };
+
+  const handleSaveProfile = () => {
+    setIsEditing(false);
+    // כאן תוכל להוסיף לוגיקה לשמירת הנתונים
+    alert("הפרטים נשמרו בהצלחה!");
   };
 
   return (
@@ -287,9 +192,9 @@ export default function Dashboard() {
                 </div>
                 <div className="hidden md:block text-right">
                   <p className="text-sm font-medium text-gray-900">
-                    אדמין ראשי
+                    {profileData.name}
                   </p>
-                  <p className="text-xs text-gray-500">admin@solarpro.co.il</p>
+                  <p className="text-xs text-gray-500">{profileData.email}</p>
                 </div>
                 <ChevronDown className="w-4 h-4 text-gray-400" />
               </div>
@@ -299,217 +204,255 @@ export default function Dashboard() {
 
         {/* Content Area */}
         <main className="p-6">
-          {activeTab === "overview" && (
-            <div className="space-y-6">
-              {/* Stats Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {stats.map((stat, index) => {
-                  const Icon = stat.icon;
-                  return (
-                    <div
-                      key={index}
-                      className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex items-start justify-between mb-4">
-                        <div className={`p-3 rounded-xl bg-${stat.color}-100`}>
-                          <Icon className={`w-6 h-6 text-${stat.color}-600`} />
-                        </div>
-                        <span
-                          className={`text-sm font-medium ${
-                            stat.change.startsWith("+")
-                              ? "text-green-600"
-                              : "text-red-600"
-                          }`}
+          {activeTab === "profile" && (
+            <div className="max-w-4xl mx-auto space-y-6">
+              {/* Profile Header */}
+              <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <div className="h-32 bg-gradient-to-r from-emerald-600 to-emerald-700"></div>
+                <div className="px-8 pb-8">
+                  <div className="flex items-end justify-between -mt-16 mb-6">
+                    <div className="relative">
+                      <div className="w-32 h-32 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-full border-4 border-white flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                        א
+                      </div>
+                      <button className="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow-lg hover:bg-gray-50 transition-colors">
+                        <Camera className="w-5 h-5 text-gray-600" />
+                      </button>
+                    </div>
+                    <div className="mb-4">
+                      {isEditing ? (
+                        <button
+                          onClick={handleSaveProfile}
+                          className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-xl font-medium transition-colors"
                         >
-                          {stat.change}
+                          <Save className="w-5 h-5" />
+                          שמור שינויים
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setIsEditing(true)}
+                          className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2 rounded-xl font-medium transition-colors"
+                        >
+                          <Edit className="w-5 h-5" />
+                          ערוך פרטים
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mb-6">
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                      {profileData.name}
+                    </h1>
+                    <p className="text-gray-600 flex items-center gap-2">
+                      <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
+                        {profileData.role}
+                      </span>
+                      <span className="text-gray-400">•</span>
+                      <span className="text-sm">
+                        הצטרף ב-{profileData.joinDate}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Personal Information */}
+              <div className="bg-white rounded-2xl shadow-sm p-8">
+                <h2 className="text-xl font-bold text-gray-900 mb-6">
+                  מידע אישי
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      שם מלא
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={profileData.name}
+                        onChange={(e) =>
+                          setProfileData({
+                            ...profileData,
+                            name: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                    ) : (
+                      <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl">
+                        <User className="w-5 h-5 text-gray-400" />
+                        <span className="text-gray-900">
+                          {profileData.name}
                         </span>
                       </div>
-                      <h3 className="text-gray-600 text-sm mb-1">
-                        {stat.title}
-                      </h3>
-                      <p className="text-3xl font-bold text-gray-900">
-                        {stat.value}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Recent Projects */}
-              <div className="bg-white rounded-2xl shadow-sm">
-                <div className="p-6 border-b border-gray-100">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold text-gray-900">
-                      פרויקטים אחרונים
-                    </h3>
-                    <button className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-medium">
-                      <Plus className="w-5 h-5" />
-                      פרויקט חדש
-                    </button>
+                    )}
                   </div>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                          לקוח
-                        </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                          סוג פרויקט
-                        </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                          סטטוס
-                        </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                          תאריך
-                        </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                          ערך
-                        </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                          התקדמות
-                        </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                          פעולות
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
-                      {recentProjects.map((project) => (
-                        <tr
-                          key={project.id}
-                          className="hover:bg-gray-50 transition-colors"
-                        >
-                          <td className="px-6 py-4">
-                            <div className="font-medium text-gray-900">
-                              {project.client}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="text-sm text-gray-600">
-                              {project.type}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <span
-                              className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                                project.status,
-                              )}`}
-                            >
-                              {project.status}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="text-sm text-gray-600">
-                              {project.date}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="font-medium text-gray-900">
-                              {project.value}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex items-center gap-2">
-                              <div className="flex-1 bg-gray-200 rounded-full h-2">
-                                <div
-                                  className="bg-emerald-600 h-2 rounded-full"
-                                  style={{ width: `${project.progress}%` }}
-                                ></div>
-                              </div>
-                              <span className="text-sm text-gray-600">
-                                {project.progress}%
-                              </span>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex items-center gap-2">
-                              <button className="p-2 hover:bg-gray-100 rounded-lg">
-                                <Eye className="w-4 h-4 text-gray-600" />
-                              </button>
-                              <button className="p-2 hover:bg-gray-100 rounded-lg">
-                                <Edit className="w-4 h-4 text-gray-600" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
 
-              {/* Recent Quotes */}
-              <div className="bg-white rounded-2xl shadow-sm">
-                <div className="p-6 border-b border-gray-100">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold text-gray-900">
-                      הצעות מחיר אחרונות
-                    </h3>
-                    <button className="text-emerald-600 hover:text-emerald-700 font-medium">
-                      הצג הכל
-                    </button>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <div className="space-y-4">
-                    {recentQuotes.map((quote) => (
-                      <div
-                        key={quote.id}
-                        className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-xl transition-colors"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-xl flex items-center justify-center">
-                            <FileText className="w-6 h-6 text-emerald-600" />
-                          </div>
-                          <div>
-                            <h4 className="font-medium text-gray-900">
-                              {quote.client}
-                            </h4>
-                            <p className="text-sm text-gray-500">
-                              {quote.email}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-8">
-                          <div className="text-right">
-                            <p className="text-sm text-gray-600">
-                              {quote.panels} פאנלים
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {quote.area}
-                            </p>
-                          </div>
-                          <span
-                            className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                              quote.status,
-                            )}`}
-                          >
-                            {quote.status}
-                          </span>
-                          <p className="text-sm text-gray-500 w-24">
-                            {quote.date}
-                          </p>
-                          <div className="flex items-center gap-2">
-                            <button className="p-2 hover:bg-gray-100 rounded-lg">
-                              <Eye className="w-4 h-4 text-gray-600" />
-                            </button>
-                            <button className="p-2 hover:bg-gray-100 rounded-lg">
-                              <Download className="w-4 h-4 text-gray-600" />
-                            </button>
-                          </div>
-                        </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      אימייל
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="email"
+                        value={profileData.email}
+                        onChange={(e) =>
+                          setProfileData({
+                            ...profileData,
+                            email: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                    ) : (
+                      <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl">
+                        <Mail className="w-5 h-5 text-gray-400" />
+                        <span className="text-gray-900">
+                          {profileData.email}
+                        </span>
                       </div>
-                    ))}
+                    )}
                   </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      טלפון
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="tel"
+                        value={profileData.phone}
+                        onChange={(e) =>
+                          setProfileData({
+                            ...profileData,
+                            phone: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                    ) : (
+                      <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl">
+                        <Phone className="w-5 h-5 text-gray-400" />
+                        <span className="text-gray-900">
+                          {profileData.phone}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      כתובת
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={profileData.address}
+                        onChange={(e) =>
+                          setProfileData({
+                            ...profileData,
+                            address: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                    ) : (
+                      <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl">
+                        <MapPin className="w-5 h-5 text-gray-400" />
+                        <span className="text-gray-900">
+                          {profileData.address}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      אודות
+                    </label>
+                    {isEditing ? (
+                      <textarea
+                        value={profileData.bio}
+                        onChange={(e) =>
+                          setProfileData({
+                            ...profileData,
+                            bio: e.target.value,
+                          })
+                        }
+                        rows={4}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                    ) : (
+                      <div className="px-4 py-3 bg-gray-50 rounded-xl">
+                        <p className="text-gray-900">{profileData.bio}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Work Information */}
+              <div className="bg-white rounded-2xl shadow-sm p-8">
+                <h2 className="text-xl font-bold text-gray-900 mb-6">
+                  פרטי עבודה
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      תפקיד
+                    </label>
+                    <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl">
+                      <span className="text-gray-900">{profileData.role}</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      מחלקה
+                    </label>
+                    <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl">
+                      <span className="text-gray-900">
+                        {profileData.department}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      תאריך הצטרפות
+                    </label>
+                    <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl">
+                      <Calendar className="w-5 h-5 text-gray-400" />
+                      <span className="text-gray-900">
+                        {profileData.joinDate}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Security Settings */}
+              <div className="bg-white rounded-2xl shadow-sm p-8">
+                <h2 className="text-xl font-bold text-gray-900 mb-6">אבטחה</h2>
+                <div className="space-y-4">
+                  <button className="w-full flex items-center justify-between px-6 py-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors">
+                    <span className="font-medium text-gray-900">שנה סיסמה</span>
+                    <ChevronDown className="w-5 h-5 text-gray-400 rotate-[-90deg]" />
+                  </button>
+                  <button className="w-full flex items-center justify-between px-6 py-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors">
+                    <span className="font-medium text-gray-900">
+                      אימות דו-שלבי
+                    </span>
+                    <ChevronDown className="w-5 h-5 text-gray-400 rotate-[-90deg]" />
+                  </button>
                 </div>
               </div>
             </div>
           )}
 
           {/* Other tabs content */}
-          {activeTab !== "overview" && (
+          {activeTab !== "profile" && (
             <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
               <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-bold text-gray-900 mb-2">

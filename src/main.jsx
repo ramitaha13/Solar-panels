@@ -10,6 +10,7 @@ import Projectspage from "./components/projectspage.jsx";
 import Quotespage from "./components/quotespage.jsx";
 import Clients from "./components/clientspage.jsx";
 import SettingsPage from "./components/settingsPage.jsx";
+import ProductsPage from "./components/productsPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
   {
     path: "/settings",
     element: <SettingsPage />,
+  },
+  {
+    path: "/products",
+    element: <ProductsPage />,
   },
 ]);
 

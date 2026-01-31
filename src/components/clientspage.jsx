@@ -35,6 +35,7 @@ import {
   FileDown,
   UserPlus,
   MoreVertical,
+  User,
 } from "lucide-react";
 
 export default function ClientsPage() {
@@ -265,11 +266,11 @@ export default function ClientsPage() {
   });
 
   const sidebarItems = [
-    { id: "overview", label: "סקירה כללית", icon: Home, path: "/dashboard" },
+    { id: "profile", label: "פרטים אישיים", icon: User, path: "/dashboard" },
     { id: "projects", label: "פרויקטים", icon: Package, path: "/projects" },
     { id: "quotes", label: "הצעות מחיר", icon: FileText, path: "/quotes" },
     { id: "clients", label: "לקוחות", icon: Users, path: "/clients" },
-    { id: "settings", label: "הגדרות", icon: Settings, path: "/dashboard" },
+    { id: "settings", label: "הגדרות", icon: Settings, path: "/settings" },
   ];
 
   const handleLogout = () => {

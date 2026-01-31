@@ -470,6 +470,29 @@ export default function SolarProWebsite() {
                 </div>
               ))}
             </div>
+
+            {/* View All Products Button */}
+            <div className="text-center mt-12">
+              <button
+                onClick={() => navigate("/products")}
+                className="inline-flex items-center gap-2 bg-white hover:bg-emerald-50 border-2 border-emerald-600 text-emerald-700 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:shadow-xl hover:scale-105"
+              >
+                לראות כל המוצרים - לחץ כאן
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </section>
 
