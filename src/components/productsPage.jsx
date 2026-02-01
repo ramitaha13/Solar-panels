@@ -236,7 +236,7 @@ export default function ProductsPage() {
   });
 
   const handleGetQuote = () => {
-    navigate("/quoteCalculator");
+    navigate("/quote-calculator");
   };
 
   const handleLogin = () => {
