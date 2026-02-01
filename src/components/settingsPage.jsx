@@ -35,6 +35,8 @@ import {
   FileDown,
   Camera,
   Edit,
+  Plus,
+  Award,
 } from "lucide-react";
 
 export default function SettingsPage() {
@@ -43,6 +45,7 @@ export default function SettingsPage() {
   const [activeSection, setActiveSection] = useState("profile");
   const [showPassword, setShowPassword] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [editingProductId, setEditingProductId] = useState(null);
 
   const [profileData, setProfileData] = useState({
     fullName: "אדמין ראשי",
@@ -61,34 +64,162 @@ export default function SettingsPage() {
     website: "www.solarpro.co.il",
   });
 
-  const [securityData, setSecurityData] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-    twoFactor: true,
-  });
+  // ניהול מוצרים
+  const [products, setProducts] = useState([
+    {
+      id: 1,
+      name: "אקו פרויקט 370",
+      power: "370W",
+      price: 249,
+      warranty: "20 שנה",
+      efficiency: "19.8%",
+      category: "premium",
+      imageUrl: "",
+      voltage: "37.2V",
+      current: "9.95A",
+      weight: "21 ק״ג",
+      dimensions: "1755×1038×35",
+      features: [
+        "יעילות גבוהה",
+        "עמידות מעולה",
+        "אחריות מורחבת",
+        "תקן בינלאומי",
+      ],
+      isHighlighted: true,
+    },
+    {
+      id: 2,
+      name: "סולאר פלוס 330",
+      power: "330W",
+      price: 219,
+      warranty: "15 שנה",
+      efficiency: "18.5%",
+      category: "standard",
+      imageUrl: "",
+      voltage: "35.8V",
+      current: "9.22A",
+      weight: "19 ק״ג",
+      dimensions: "1650×992×35",
+      features: ["מחיר אטרקטיבי", "התקנה קלה", "תחזוקה נמוכה"],
+      isHighlighted: false,
+    },
+  ]);
 
-  const [notificationSettings, setNotificationSettings] = useState({
-    emailNotifications: true,
-    smsNotifications: false,
-    newQuote: true,
-    projectUpdate: true,
-    paymentReceived: true,
-    systemAlerts: true,
-  });
-
-  const [systemSettings, setSystemSettings] = useState({
-    language: "he",
-    timezone: "Asia/Jerusalem",
-    currency: "ILS",
-    dateFormat: "DD/MM/YYYY",
-    autoBackup: true,
-    darkMode: false,
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    power: "",
+    price: "",
+    warranty: "",
+    efficiency: "",
+    category: "",
+    imageUrl: "",
+    voltage: "",
+    current: "",
+    weight: "",
+    dimensions: "",
+    features: ["", "", "", ""],
+    isHighlighted: false,
   });
 
   const handleSave = () => {
     setSaveSuccess(true);
     setTimeout(() => setSaveSuccess(false), 3000);
+  };
+
+  const handleAddProduct = () => {
+    if (!newProduct.name || !newProduct.power || !newProduct.price) {
+      alert("נא למלא את כל השדות החובה");
+      return;
+    }
+
+    const productToAdd = {
+      ...newProduct,
+      id: Date.now(),
+      features: newProduct.features.filter((f) => f.trim() !== ""),
+    };
+
+    setProducts([...products, productToAdd]);
+    setNewProduct({
+      name: "",
+      power: "",
+      price: "",
+      warranty: "",
+      efficiency: "",
+      category: "",
+      imageUrl: "",
+      voltage: "",
+      current: "",
+      weight: "",
+      dimensions: "",
+      features: ["", "", "", ""],
+      isHighlighted: false,
+    });
+    handleSave();
+  };
+
+  const handleEditProduct = (product) => {
+    setEditingProductId(product.id);
+    setNewProduct({
+      ...product,
+      features: [...product.features, "", "", "", ""].slice(0, 4),
+    });
+  };
+
+  const handleUpdateProduct = () => {
+    setProducts(
+      products.map((p) =>
+        p.id === editingProductId
+          ? {
+              ...newProduct,
+              id: editingProductId,
+              features: newProduct.features.filter((f) => f.trim() !== ""),
+            }
+          : p,
+      ),
+    );
+    setEditingProductId(null);
+    setNewProduct({
+      name: "",
+      power: "",
+      price: "",
+      warranty: "",
+      efficiency: "",
+      category: "",
+      imageUrl: "",
+      voltage: "",
+      current: "",
+      weight: "",
+      dimensions: "",
+      features: ["", "", "", ""],
+      isHighlighted: false,
+    });
+    handleSave();
+  };
+
+  const handleDeleteProduct = (id) => {
+    if (window.confirm("האם אתה בטוח שברצונך למחוק מוצר זה?")) {
+      setProducts(products.filter((p) => p.id !== id));
+      handleSave();
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingProductId(null);
+    setNewProduct({
+      name: "",
+      power: "",
+      price: "",
+      warranty: "",
+      efficiency: "",
+      category: "",
+      imageUrl: "",
+      voltage: "",
+      current: "",
+      weight: "",
+      dimensions: "",
+      features: ["", "", "", ""],
+      isHighlighted: false,
+    });
   };
 
   const sidebarItems = [
@@ -102,12 +233,7 @@ export default function SettingsPage() {
   const settingsSections = [
     { id: "profile", label: "פרופיל אישי", icon: User },
     { id: "company", label: "פרטי החברה", icon: Building2 },
-    { id: "security", label: "אבטחה וסיסמה", icon: Shield },
-    { id: "notifications", label: "התראות", icon: Bell },
-    { id: "appearance", label: "מראה ותצוגה", icon: Palette },
-    { id: "system", label: "הגדרות מערכת", icon: Settings },
-    { id: "billing", label: "חיוב ותשלומים", icon: CreditCard },
-    { id: "backup", label: "גיבוי ושחזור", icon: Database },
+    { id: "products", label: "ניהול מוצרים", icon: Package },
   ];
 
   const handleLogout = () => {
@@ -509,513 +635,437 @@ export default function SettingsPage() {
                 </div>
               )}
 
-              {/* Security Section */}
-              {activeSection === "security" && (
-                <div className="bg-white rounded-2xl shadow-sm p-8">
-                  <div className="mb-8">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                      אבטחה וסיסמה
-                    </h3>
-                    <p className="text-gray-600">
-                      עדכן את הסיסמה והגדרות האבטחה
-                    </p>
-                  </div>
+              {/* Products Management Section */}
+              {activeSection === "products" && (
+                <div className="space-y-6">
+                  {/* Existing Products List */}
+                  <div className="bg-white rounded-2xl shadow-sm p-8">
+                    <div className="mb-6">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                        מוצרים קיימים
+                      </h3>
+                      <p className="text-gray-600">ערוך או מחק מוצרים קיימים</p>
+                    </div>
 
-                  <div className="space-y-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        סיסמה נוכחית
-                      </label>
-                      <div className="relative">
-                        <input
-                          type={showPassword ? "text" : "password"}
-                          value={securityData.currentPassword}
-                          onChange={(e) =>
-                            setSecurityData({
-                              ...securityData,
-                              currentPassword: e.target.value,
-                            })
-                          }
-                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all pl-12"
-                        />
-                        <button
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+                    <div className="space-y-4">
+                      {products.map((product) => (
+                        <div
+                          key={product.id}
+                          className={`border-2 rounded-xl p-6 transition-all ${
+                            product.isHighlighted
+                              ? "border-amber-300 bg-amber-50"
+                              : "border-gray-200 bg-white"
+                          }`}
                         >
-                          {showPassword ? (
-                            <EyeOff className="w-5 h-5" />
-                          ) : (
-                            <Eye className="w-5 h-5" />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        סיסמה חדשה
-                      </label>
-                      <input
-                        type="password"
-                        value={securityData.newPassword}
-                        onChange={(e) =>
-                          setSecurityData({
-                            ...securityData,
-                            newPassword: e.target.value,
-                          })
-                        }
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        אישור סיסמה
-                      </label>
-                      <input
-                        type="password"
-                        value={securityData.confirmPassword}
-                        onChange={(e) =>
-                          setSecurityData({
-                            ...securityData,
-                            confirmPassword: e.target.value,
-                          })
-                        }
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
-                      />
-                    </div>
-
-                    <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
-                      <div className="flex items-start gap-3">
-                        <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5" />
-                        <div className="text-sm text-blue-800">
-                          <p className="font-medium mb-1">דרישות סיסמה:</p>
-                          <ul className="list-disc list-inside space-y-1">
-                            <li>לפחות 8 תווים</li>
-                            <li>אות גדולה אחת לפחות</li>
-                            <li>מספר אחד לפחות</li>
-                            <li>תו מיוחד אחד לפחות</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Two-Factor Authentication */}
-                    <div className="pt-6 border-t border-gray-200">
-                      <div className="flex items-center justify-between mb-4">
-                        <div>
-                          <h4 className="font-bold text-gray-900 mb-1">
-                            אימות דו-שלבי
-                          </h4>
-                          <p className="text-sm text-gray-600">
-                            הוסף שכבת אבטחה נוספת לחשבון שלך
-                          </p>
-                        </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={securityData.twoFactor}
-                            onChange={(e) =>
-                              setSecurityData({
-                                ...securityData,
-                                twoFactor: e.target.checked,
-                              })
-                            }
-                            className="sr-only peer"
-                          />
-                          <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:right-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-600"></div>
-                        </label>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-3 pt-4">
-                      <button
-                        onClick={handleSave}
-                        className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium transition-all flex items-center gap-2"
-                      >
-                        <Save className="w-5 h-5" />
-                        עדכן סיסמה
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Notifications Section */}
-              {activeSection === "notifications" && (
-                <div className="bg-white rounded-2xl shadow-sm p-8">
-                  <div className="mb-8">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                      התראות
-                    </h3>
-                    <p className="text-gray-600">נהל את העדפות ההתראות שלך</p>
-                  </div>
-
-                  <div className="space-y-6">
-                    {/* Email Notifications */}
-                    <div className="flex items-center justify-between py-4 border-b border-gray-100">
-                      <div className="flex items-center gap-4">
-                        <Mail className="w-5 h-5 text-gray-400" />
-                        <div>
-                          <h4 className="font-medium text-gray-900">
-                            התראות באימייל
-                          </h4>
-                          <p className="text-sm text-gray-500">
-                            קבל עדכונים באימייל
-                          </p>
-                        </div>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={notificationSettings.emailNotifications}
-                          onChange={(e) =>
-                            setNotificationSettings({
-                              ...notificationSettings,
-                              emailNotifications: e.target.checked,
-                            })
-                          }
-                          className="sr-only peer"
-                        />
-                        <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:right-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-600"></div>
-                      </label>
-                    </div>
-
-                    {/* SMS Notifications */}
-                    <div className="flex items-center justify-between py-4 border-b border-gray-100">
-                      <div className="flex items-center gap-4">
-                        <Phone className="w-5 h-5 text-gray-400" />
-                        <div>
-                          <h4 className="font-medium text-gray-900">
-                            התראות SMS
-                          </h4>
-                          <p className="text-sm text-gray-500">
-                            קבל עדכונים בהודעות טקסט
-                          </p>
-                        </div>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={notificationSettings.smsNotifications}
-                          onChange={(e) =>
-                            setNotificationSettings({
-                              ...notificationSettings,
-                              smsNotifications: e.target.checked,
-                            })
-                          }
-                          className="sr-only peer"
-                        />
-                        <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:right-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-600"></div>
-                      </label>
-                    </div>
-
-                    {/* Specific Notifications */}
-                    <div className="pt-4">
-                      <h4 className="font-bold text-gray-900 mb-4">
-                        התראות ספציפיות
-                      </h4>
-                      <div className="space-y-4">
-                        {[
-                          { key: "newQuote", label: "הצעת מחיר חדשה" },
-                          { key: "projectUpdate", label: "עדכון פרויקט" },
-                          { key: "paymentReceived", label: "תשלום התקבל" },
-                          { key: "systemAlerts", label: "התראות מערכת" },
-                        ].map((item) => (
-                          <div
-                            key={item.key}
-                            className="flex items-center justify-between"
-                          >
-                            <span className="text-gray-700">{item.label}</span>
-                            <label className="relative inline-flex items-center cursor-pointer">
-                              <input
-                                type="checkbox"
-                                checked={notificationSettings[item.key]}
-                                onChange={(e) =>
-                                  setNotificationSettings({
-                                    ...notificationSettings,
-                                    [item.key]: e.target.checked,
-                                  })
-                                }
-                                className="sr-only peer"
-                              />
-                              <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:right-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-600"></div>
-                            </label>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="flex gap-3 pt-4">
-                      <button
-                        onClick={handleSave}
-                        className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium transition-all flex items-center gap-2"
-                      >
-                        <Save className="w-5 h-5" />
-                        שמור הגדרות
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* System Settings */}
-              {activeSection === "system" && (
-                <div className="bg-white rounded-2xl shadow-sm p-8">
-                  <div className="mb-8">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                      הגדרות מערכת
-                    </h3>
-                    <p className="text-gray-600">
-                      התאם את הגדרות המערכת הכלליות
-                    </p>
-                  </div>
-
-                  <div className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          שפה
-                        </label>
-                        <select
-                          value={systemSettings.language}
-                          onChange={(e) =>
-                            setSystemSettings({
-                              ...systemSettings,
-                              language: e.target.value,
-                            })
-                          }
-                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
-                        >
-                          <option value="he">עברית</option>
-                          <option value="en">English</option>
-                          <option value="ar">العربية</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          אזור זמן
-                        </label>
-                        <select
-                          value={systemSettings.timezone}
-                          onChange={(e) =>
-                            setSystemSettings({
-                              ...systemSettings,
-                              timezone: e.target.value,
-                            })
-                          }
-                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
-                        >
-                          <option value="Asia/Jerusalem">
-                            ירושלים (GMT+2)
-                          </option>
-                          <option value="Europe/London">לונדון (GMT)</option>
-                          <option value="America/New_York">
-                            ניו יורק (GMT-5)
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          מטבע
-                        </label>
-                        <select
-                          value={systemSettings.currency}
-                          onChange={(e) =>
-                            setSystemSettings({
-                              ...systemSettings,
-                              currency: e.target.value,
-                            })
-                          }
-                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
-                        >
-                          <option value="ILS">שקל (₪)</option>
-                          <option value="USD">דולר ($)</option>
-                          <option value="EUR">יורו (€)</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          פורמט תאריך
-                        </label>
-                        <select
-                          value={systemSettings.dateFormat}
-                          onChange={(e) =>
-                            setSystemSettings({
-                              ...systemSettings,
-                              dateFormat: e.target.value,
-                            })
-                          }
-                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
-                        >
-                          <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-                          <option value="MM/DD/YYYY">MM/DD/YYYY</option>
-                          <option value="YYYY-MM-DD">YYYY-MM-DD</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    {/* Auto Backup */}
-                    <div className="flex items-center justify-between py-4 border-t border-gray-100">
-                      <div>
-                        <h4 className="font-medium text-gray-900">
-                          גיבוי אוטומטי
-                        </h4>
-                        <p className="text-sm text-gray-500">
-                          גבה את המערכת באופן יומי
-                        </p>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={systemSettings.autoBackup}
-                          onChange={(e) =>
-                            setSystemSettings({
-                              ...systemSettings,
-                              autoBackup: e.target.checked,
-                            })
-                          }
-                          className="sr-only peer"
-                        />
-                        <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:right-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-600"></div>
-                      </label>
-                    </div>
-
-                    <div className="flex gap-3 pt-4">
-                      <button
-                        onClick={handleSave}
-                        className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium transition-all flex items-center gap-2"
-                      >
-                        <Save className="w-5 h-5" />
-                        שמור הגדרות
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Backup Section */}
-              {activeSection === "backup" && (
-                <div className="bg-white rounded-2xl shadow-sm p-8">
-                  <div className="mb-8">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                      גיבוי ושחזור
-                    </h3>
-                    <p className="text-gray-600">
-                      גבה ושחזר את נתוני המערכת שלך
-                    </p>
-                  </div>
-
-                  <div className="space-y-6">
-                    {/* Backup Now */}
-                    <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-6">
-                      <div className="flex items-start gap-4">
-                        <Database className="w-6 h-6 text-emerald-600 mt-1" />
-                        <div className="flex-1">
-                          <h4 className="font-bold text-gray-900 mb-2">
-                            גיבוי מיידי
-                          </h4>
-                          <p className="text-sm text-gray-600 mb-4">
-                            צור גיבוי של כל נתוני המערכת כולל פרויקטים, לקוחות
-                            והצעות מחיר
-                          </p>
-                          <button className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium transition-all flex items-center gap-2">
-                            <Download className="w-5 h-5" />
-                            צור גיבוי עכשיו
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Restore */}
-                    <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6">
-                      <div className="flex items-start gap-4">
-                        <Upload className="w-6 h-6 text-blue-600 mt-1" />
-                        <div className="flex-1">
-                          <h4 className="font-bold text-gray-900 mb-2">
-                            שחזור מגיבוי
-                          </h4>
-                          <p className="text-sm text-gray-600 mb-4">
-                            שחזר את המערכת מקובץ גיבוי קודם
-                          </p>
-                          <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all flex items-center gap-2">
-                            <Upload className="w-5 h-5" />
-                            העלה קובץ גיבוי
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Last Backup Info */}
-                    <div className="border-2 border-gray-200 rounded-xl p-6">
-                      <h4 className="font-bold text-gray-900 mb-4">
-                        היסטוריית גיבויים
-                      </h4>
-                      <div className="space-y-3">
-                        {[
-                          {
-                            date: "31/01/2026 10:30",
-                            size: "245 MB",
-                            status: "הצליח",
-                          },
-                          {
-                            date: "30/01/2026 10:30",
-                            size: "243 MB",
-                            status: "הצליח",
-                          },
-                          {
-                            date: "29/01/2026 10:30",
-                            size: "240 MB",
-                            status: "הצליח",
-                          },
-                        ].map((backup, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center justify-between p-4 bg-gray-50 rounded-xl"
-                          >
-                            <div className="flex items-center gap-3">
-                              <Check className="w-5 h-5 text-green-600" />
-                              <div>
-                                <p className="font-medium text-gray-900">
-                                  {backup.date}
-                                </p>
-                                <p className="text-sm text-gray-500">
-                                  {backup.size}
-                                </p>
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-2">
+                                <h4 className="text-xl font-bold text-gray-900">
+                                  {product.name}
+                                </h4>
+                                {product.isHighlighted && (
+                                  <span className="bg-amber-400 text-amber-900 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                                    <Award className="w-3 h-3" />
+                                    מומלץ
+                                  </span>
+                                )}
+                              </div>
+                              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                <div>
+                                  <span className="text-gray-500">הספק:</span>
+                                  <span className="font-medium text-gray-900 mr-2">
+                                    {product.power}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="text-gray-500">מחיר:</span>
+                                  <span className="font-medium text-gray-900 mr-2">
+                                    ₪{product.price}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="text-gray-500">יעילות:</span>
+                                  <span className="font-medium text-gray-900 mr-2">
+                                    {product.efficiency}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="text-gray-500">אחריות:</span>
+                                  <span className="font-medium text-gray-900 mr-2">
+                                    {product.warranty}
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <button className="p-2 hover:bg-gray-200 rounded-lg">
-                                <Download className="w-4 h-4 text-gray-600" />
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleEditProduct(product)}
+                                className="p-2 hover:bg-blue-50 text-blue-600 rounded-lg transition-all"
+                                title="ערוך מוצר"
+                              >
+                                <Edit className="w-5 h-5" />
                               </button>
-                              <button className="p-2 hover:bg-gray-200 rounded-lg">
-                                <Trash2 className="w-4 h-4 text-gray-600" />
+                              <button
+                                onClick={() => handleDeleteProduct(product.id)}
+                                className="p-2 hover:bg-red-50 text-red-600 rounded-lg transition-all"
+                                title="מחק מוצר"
+                              >
+                                <Trash2 className="w-5 h-5" />
                               </button>
                             </div>
                           </div>
-                        ))}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Add/Edit Product Form */}
+                  <div className="bg-white rounded-2xl shadow-sm p-8">
+                    <div className="flex items-center justify-between mb-8">
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                          {editingProductId ? "ערוך מוצר" : "הוסף מוצר חדש"}
+                        </h3>
+                        <p className="text-gray-600">
+                          {editingProductId
+                            ? "עדכן את פרטי המוצר"
+                            : "הוסף מוצר חדש לקטלוג"}
+                        </p>
+                      </div>
+                      {editingProductId && (
+                        <button
+                          onClick={handleCancelEdit}
+                          className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-all"
+                        >
+                          ביטול עריכה
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="space-y-6">
+                      {/* Basic Info */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            שם המוצר *
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="לדוגמה: אקו פרויקט 370"
+                            value={newProduct.name}
+                            onChange={(e) =>
+                              setNewProduct({
+                                ...newProduct,
+                                name: e.target.value,
+                              })
+                            }
+                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            הספק (W) *
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="לדוגמה: 370W"
+                            value={newProduct.power}
+                            onChange={(e) =>
+                              setNewProduct({
+                                ...newProduct,
+                                power: e.target.value,
+                              })
+                            }
+                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            מחיר (₪) *
+                          </label>
+                          <input
+                            type="number"
+                            placeholder="לדוגמה: 249"
+                            value={newProduct.price}
+                            onChange={(e) =>
+                              setNewProduct({
+                                ...newProduct,
+                                price: e.target.value,
+                              })
+                            }
+                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            אחריות *
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="לדוגמה: 20 שנה"
+                            value={newProduct.warranty}
+                            onChange={(e) =>
+                              setNewProduct({
+                                ...newProduct,
+                                warranty: e.target.value,
+                              })
+                            }
+                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            יעילות (%) *
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="לדוגמה: 19.8%"
+                            value={newProduct.efficiency}
+                            onChange={(e) =>
+                              setNewProduct({
+                                ...newProduct,
+                                efficiency: e.target.value,
+                              })
+                            }
+                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            קטגוריה *
+                          </label>
+                          <select
+                            value={newProduct.category}
+                            onChange={(e) =>
+                              setNewProduct({
+                                ...newProduct,
+                                category: e.target.value,
+                              })
+                            }
+                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
+                          >
+                            <option value="">בחר קטגוריה</option>
+                            <option value="standard">סטנדרט</option>
+                            <option value="premium">פרמיום</option>
+                            <option value="compact">קומפקטי</option>
+                            <option value="commercial">מסחרי</option>
+                          </select>
+                        </div>
+
+                        <div className="md:col-span-2">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            תמונת המוצר (URL)
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="https://example.com/image.jpg"
+                            value={newProduct.imageUrl}
+                            onChange={(e) =>
+                              setNewProduct({
+                                ...newProduct,
+                                imageUrl: e.target.value,
+                              })
+                            }
+                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Technical Specs */}
+                      <div className="pt-6 border-t border-gray-200">
+                        <h4 className="text-lg font-bold text-gray-900 mb-4">
+                          מפרט טכני
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              מתח (V)
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="לדוגמה: 37.2V"
+                              value={newProduct.voltage}
+                              onChange={(e) =>
+                                setNewProduct({
+                                  ...newProduct,
+                                  voltage: e.target.value,
+                                })
+                              }
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              זרם (A)
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="לדוגמה: 9.95A"
+                              value={newProduct.current}
+                              onChange={(e) =>
+                                setNewProduct({
+                                  ...newProduct,
+                                  current: e.target.value,
+                                })
+                              }
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              משקל
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="לדוגמה: 21 ק״ג"
+                              value={newProduct.weight}
+                              onChange={(e) =>
+                                setNewProduct({
+                                  ...newProduct,
+                                  weight: e.target.value,
+                                })
+                              }
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              מידות (מ״מ)
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="לדוגמה: 1755×1038×35"
+                              value={newProduct.dimensions}
+                              onChange={(e) =>
+                                setNewProduct({
+                                  ...newProduct,
+                                  dimensions: e.target.value,
+                                })
+                              }
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Features */}
+                      <div className="pt-6 border-t border-gray-200">
+                        <h4 className="text-lg font-bold text-gray-900 mb-4">
+                          תכונות המוצר
+                        </h4>
+                        <div className="space-y-3">
+                          {newProduct.features.map((feature, index) => (
+                            <input
+                              key={index}
+                              type="text"
+                              placeholder={`תכונה ${index + 1}`}
+                              value={feature}
+                              onChange={(e) => {
+                                const updatedFeatures = [
+                                  ...newProduct.features,
+                                ];
+                                updatedFeatures[index] = e.target.value;
+                                setNewProduct({
+                                  ...newProduct,
+                                  features: updatedFeatures,
+                                });
+                              }}
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none transition-all"
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Highlighted Product Toggle */}
+                      <div className="pt-6 border-t border-gray-200">
+                        <label className="flex items-center justify-between p-4 bg-amber-50 border-2 border-amber-200 rounded-xl cursor-pointer hover:bg-amber-100 transition-all">
+                          <div className="flex items-center gap-3">
+                            <Award className="w-6 h-6 text-amber-600" />
+                            <div>
+                              <p className="font-medium text-gray-900">
+                                מוצר מומלץ
+                              </p>
+                              <p className="text-sm text-gray-600">
+                                סמן כמוצר מומלץ ביותר
+                              </p>
+                            </div>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={newProduct.isHighlighted}
+                            onChange={(e) =>
+                              setNewProduct({
+                                ...newProduct,
+                                isHighlighted: e.target.checked,
+                              })
+                            }
+                            className="w-6 h-6 text-emerald-600 rounded focus:ring-emerald-500"
+                          />
+                        </label>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-3 pt-6">
+                        {editingProductId ? (
+                          <>
+                            <button
+                              onClick={handleUpdateProduct}
+                              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+                            >
+                              <Save className="w-5 h-5" />
+                              עדכן מוצר
+                            </button>
+                            <button
+                              onClick={handleCancelEdit}
+                              className="px-6 py-4 border-2 border-gray-200 hover:bg-gray-50 rounded-xl font-medium transition-all"
+                            >
+                              ביטול
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              onClick={handleAddProduct}
+                              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+                            >
+                              <Plus className="w-5 h-5" />
+                              הוסף מוצר
+                            </button>
+                            <button
+                              onClick={() =>
+                                setNewProduct({
+                                  name: "",
+                                  power: "",
+                                  price: "",
+                                  warranty: "",
+                                  efficiency: "",
+                                  category: "",
+                                  imageUrl: "",
+                                  voltage: "",
+                                  current: "",
+                                  weight: "",
+                                  dimensions: "",
+                                  features: ["", "", "", ""],
+                                  isHighlighted: false,
+                                })
+                              }
+                              className="px-6 py-4 border-2 border-gray-200 hover:bg-gray-50 rounded-xl font-medium transition-all"
+                            >
+                              נקה טופס
+                            </button>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
-
-              {/* Other Sections Placeholder */}
-              {["appearance", "billing"].includes(activeSection) && (
-                <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
-                  <Settings className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    {
-                      settingsSections.find((s) => s.id === activeSection)
-                        ?.label
-                    }
-                  </h3>
-                  <p className="text-gray-600">תוכן עמוד זה יפותח בהמשך...</p>
                 </div>
               )}
             </div>

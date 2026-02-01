@@ -431,23 +431,6 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-
-              {/* Security Settings */}
-              <div className="bg-white rounded-2xl shadow-sm p-8">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">אבטחה</h2>
-                <div className="space-y-4">
-                  <button className="w-full flex items-center justify-between px-6 py-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors">
-                    <span className="font-medium text-gray-900">שנה סיסמה</span>
-                    <ChevronDown className="w-5 h-5 text-gray-400 rotate-[-90deg]" />
-                  </button>
-                  <button className="w-full flex items-center justify-between px-6 py-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors">
-                    <span className="font-medium text-gray-900">
-                      אימות דו-שלבי
-                    </span>
-                    <ChevronDown className="w-5 h-5 text-gray-400 rotate-[-90deg]" />
-                  </button>
-                </div>
-              </div>
             </div>
           )}
 
