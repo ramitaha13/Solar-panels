@@ -12,6 +12,7 @@ import Clients from "./components/clientspage.jsx";
 import SettingsPage from "./components/settingsPage.jsx";
 import ProductsPage from "./components/productsPage.jsx";
 import Savingscalculator from "./components/savingscalculator.jsx";
+import Newprojectpage from "./components/newprojectpage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
   {
     path: "/savings-calculator",
     element: <Savingscalculator />,
+  },
+  {
+    path: "/newprojectpage",
+    element: <Newprojectpage />,
   },
 ]);
 

@@ -41,7 +41,6 @@ export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [sortBy, setSortBy] = useState("date");
-  const [showNewProjectModal, setShowNewProjectModal] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
 
   const projects = [
@@ -397,7 +396,7 @@ export default function ProjectsPage() {
 
                 {/* New Project */}
                 <button
-                  onClick={() => setShowNewProjectModal(true)}
+                  onClick={() => navigate("/newprojectpage")}
                   className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white rounded-xl font-medium transition-all shadow-lg hover:shadow-xl"
                 >
                   <Plus className="w-5 h-5" />
