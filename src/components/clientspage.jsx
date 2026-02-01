@@ -473,7 +473,10 @@ export default function ClientsPage() {
                 </button>
 
                 {/* New Client */}
-                <button className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white rounded-xl font-medium transition-all shadow-lg hover:shadow-xl">
+                <button
+                  onClick={() => navigate("/newclientpage")}
+                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white rounded-xl font-medium transition-all shadow-lg hover:shadow-xl"
+                >
                   <UserPlus className="w-5 h-5" />
                   לקוח חדש
                 </button>
