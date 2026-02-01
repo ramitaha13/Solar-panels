@@ -118,7 +118,11 @@ export default function SolarProWebsite() {
   };
 
   const handleGetQuote = () => {
-    navigate("/quoteCalculator");
+    navigate("/quote-calculator");
+  };
+
+  const handleSavingsCalculator = () => {
+    navigate("/savings-calculator");
   };
 
   const handleLogin = () => {
@@ -305,14 +309,11 @@ export default function SolarProWebsite() {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
-                  onClick={handleGetQuote}
+                  onClick={handleSavingsCalculator}
                   className="bg-amber-400 hover:bg-amber-300 text-emerald-900 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 flex items-center justify-center gap-2"
                 >
                   <Sun className="w-5 h-5" />
                   חשבו את החיסכון שלכם
-                </button>
-                <button className="bg-white/10 backdrop-blur-sm hover:bg-white/20 border-2 border-white/30 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300">
-                  למד עוד
                 </button>
               </div>
             </div>
@@ -321,7 +322,7 @@ export default function SolarProWebsite() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20 max-w-4xl mx-auto">
               <div className="text-center">
                 <div className="text-4xl md:text-5xl font-bold text-amber-300 mb-2">
-                  +10k
+                  +1k
                 </div>
                 <div className="text-emerald-200">לקוחות מרוצים</div>
               </div>
@@ -333,7 +334,7 @@ export default function SolarProWebsite() {
               </div>
               <div className="text-center">
                 <div className="text-4xl md:text-5xl font-bold text-amber-300 mb-2">
-                  +25
+                  +7
                 </div>
                 <div className="text-emerald-200">שנות אחריות</div>
               </div>
@@ -656,19 +657,19 @@ export default function SolarProWebsite() {
                     <span>info@solarpro.co.il</span>
                   </a>
                   <a
-                    href="tel:+9721800"
+                    href="tel:+9720525549005"
                     className="flex items-center gap-3 text-emerald-200 hover:text-amber-300 transition-colors group"
                   >
                     <div className="bg-emerald-800 p-2 rounded-lg group-hover:bg-emerald-700 transition-colors">
                       <Phone className="w-5 h-5" />
                     </div>
-                    <span>SOLAR-IL-1-800</span>
+                    <span>SOLAR-IL-1-Tel</span>
                   </a>
                   <div className="flex items-center gap-3 text-emerald-200">
                     <div className="bg-emerald-800 p-2 rounded-lg">
                       <MapPin className="w-5 h-5" />
                     </div>
-                    <span>רחוב האנרגיה 123, תל אביב</span>
+                    <span>כביש ראשי , כאבול</span>
                   </div>
                 </div>
               </div>
@@ -676,38 +677,10 @@ export default function SolarProWebsite() {
 
             <div className="border-t border-emerald-800 pt-8 max-w-7xl mx-auto">
               <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div className="flex gap-6 text-sm">
-                  <a
-                    href="#products"
-                    onClick={(e) => handleNavClick(e, "#products")}
-                    className="text-emerald-300 hover:text-amber-300 transition-colors"
-                  >
-                    מוצרים
-                  </a>
-                  <a
-                    href="#calculator"
-                    onClick={(e) => handleNavClick(e, "#calculator")}
-                    className="text-emerald-300 hover:text-amber-300 transition-colors"
-                  >
-                    מחשבון
-                  </a>
-                  <a
-                    href="#"
-                    className="text-emerald-300 hover:text-amber-300 transition-colors"
-                  >
-                    אודותינו
-                  </a>
-                  <a
-                    href="#"
-                    className="text-emerald-300 hover:text-amber-300 transition-colors"
-                  >
-                    שאלות נפוצות
-                  </a>
-                </div>
                 <div className="flex items-center gap-2 text-emerald-300 text-sm">
                   <Sun className="w-4 h-4 text-amber-400" />
                   <span>
-                    © 2024 סולאר פרו. כל הזכויות שמורות. מופעל בכוח השמש
+                    © 2026 סולאר פרו. כל הזכויות שמורות. מופעל בכוח השמש
                   </span>
                 </div>
               </div>

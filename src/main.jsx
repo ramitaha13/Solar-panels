@@ -11,6 +11,7 @@ import Quotespage from "./components/quotespage.jsx";
 import Clients from "./components/clientspage.jsx";
 import SettingsPage from "./components/settingsPage.jsx";
 import ProductsPage from "./components/productsPage.jsx";
+import Savingscalculator from "./components/savingscalculator.jsx";
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/quoteCalculator",
+    path: "/quote-calculator",
     element: <QuoteCalculator />,
   },
   {
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
   {
     path: "/products",
     element: <ProductsPage />,
+  },
+  {
+    path: "/savings-calculator",
+    element: <Savingscalculator />,
   },
 ]);
 
